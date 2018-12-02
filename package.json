@@ -1,0 +1,61 @@
+{
+  "name": "resource-system",
+  "version": "0.0.1",
+  "description": "Resource system",
+  "main": "lib-es6/index.js",
+  "scripts": {
+    "clean": "shx rm -rf _bundles lib lib-es6",
+    "build-commonjs": "tsc",
+    "build-es6": "tsc -m es6 --outDir lib-es6",
+    "build-umd": "webpack --mode production",
+    "build:watch": "tsc -w",
+    "build": "npm run clean && npm run build-commonjs && npm run build-es6 && npm run build-umd",
+    "start": "webpack-dev-server --open --mode development --config webpack.config.example.js",
+    "test": "karma start karma.config.js --single-run",
+    "test-watch": "karma start karma.config.js",
+    "bench:resource": "node benchmarck/resource.bench.js",
+    "lint": "tslint \"src/**/*.ts\"",
+    "doc": "typedoc --out doc src --name resource-system --readme README.md --module commonsjs --target es6 --theme default --exclude \"**/*+(index|.spec|.e2e).ts\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nherault/resource-system.git"
+  },
+  "keywords": [
+    "library",
+    "typescript",
+    "karma",
+    "jasmine",
+    "starter"
+  ],
+  "author": "Nicolas Herault <nayran@free.fr> (http://github.com/nherault)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nherault/resource-system/issues"
+  },
+  "homepage": "https://github.com/nherault/resource-system#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/core-js": "^2.5.0",
+    "@types/jasmine": "^2.8.9",
+    "@types/node": "^10.12.2",
+    "benchmark": "^2.1.4",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "jasmine-core": "^3.3.0",
+    "jasmine-expect": "^3.8.3",
+    "karma": "^3.1.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.2",
+    "karma-typescript": "^3.0.13",
+    "shx": "^0.3.2",
+    "ts-loader": "^4.4.2",
+    "tslint": "^5.7.0",
+    "typedoc": "^0.12.0",
+    "typescript": "^3.1.6",
+    "webpack": "^4.24.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.10"
+  }
+}
