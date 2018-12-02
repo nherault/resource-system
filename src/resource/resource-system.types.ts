@@ -50,7 +50,7 @@ export interface ResourceSystem {
     addLoader(loader: Loader): ResourceSystem;
     removeLoader(loader: Loader): ResourceSystem;
     removeAllLoaders(): ResourceSystem;
-    loadResources(...resourcesInput: ResourceInput[]): Promise<{ [propName: string]: ResourceOutput }>;
+    loadResources(resourcesInput: ResourceInput | ResourceInput[]): Promise<{ [propName: string]: ResourceOutput }>;
     updateOptions(options: ResourceSystemOptionParam): ResourceSystem;
     isAllLoaded(): boolean;
     getResource(id: string): ResourceOutput | undefined;

@@ -27,7 +27,7 @@ export class ResourceReloaderDefault implements ResourceReloader {
                     }
                     return resource;
                 });
-                resourceSystem.loadResources(...resourcesInputDebug);
+                resourceSystem.loadResources(resourcesInputDebug);
             }
         }, this.options.intervalTime);
     }

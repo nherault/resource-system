@@ -62,7 +62,7 @@ export class ResourceSystemDefault implements ResourceSystem {
     return this;
   }
 
-  public loadResources(...resourcesInput: ResourceInput[]): Promise<ResourceOutputData> {
+  public loadResources(resourcesInput: ResourceInput | ResourceInput[]): Promise<ResourceOutputData> {
 
     return new Promise((resolve, reject) => {
       if (!this.isAllLoaded()) {
@@ -72,7 +72,8 @@ export class ResourceSystemDefault implements ResourceSystem {
       this.nbToLoad += resourcesInput.length;
 
       // Iterate from the resources.
-      resourcesInput.forEach((resourceInput) => {
+      const resourcesInputToLoad = Array.isArray(resourcesInput) ? resourcesInput : [resourcesInput];
+      resourcesInputToLoad.forEach((resourceInput) => {
 
         // Load if not already load or if autoReload is set to 'true'
         if (this.options.autoReload || this.resourcesInput[resourceInput.id] === undefined) {

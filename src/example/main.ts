@@ -12,7 +12,7 @@ const toLoad = [
 const resourceSystem = new ResourceSystemDefault();
 resourceSystem.addLoader(imageLoader);
 resourceSystem.addLoader(jsonLoader);
-resourceSystem.loadResources(...toLoad)
+resourceSystem.loadResources(toLoad)
     .then((resourceDatas: any) => {
         body[0].innerText = `resourceDatas: ${JSON.stringify(resourceDatas)} |
         imageTest: ${JSON.stringify(resourceSystem.getResource('imageTest'))} |
