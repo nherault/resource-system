@@ -1,49 +1,49 @@
 export class ImageLoader {
 
-    private _loaded: number;
-    private _nbToload: number;
-    private _images: HTMLImageElement[];
-    private _isAllLoaded: boolean;
+    private loaded: number;
+    private nbToload: number;
+    private images: HTMLImageElement[];
+    private isAllLoaded: boolean;
 
     constructor() {
-        this._loaded = 0;
-        this._nbToload = 0;
-        this._images = [];
-        this._isAllLoaded = false;
+        this.loaded = 0;
+        this.nbToload = 0;
+        this.images = [];
+        this.isAllLoaded = false;
     }
 
-    preload( callback: Function, ...imageUrls: string[]): void {
+    public preload(callback: Function, ...imageUrls: string[]): void {
 
-        this._loaded = 0;
-        this._isAllLoaded = false;
-        this._images = [];
+        this.loaded = 0;
+        this.isAllLoaded = false;
+        this.images = [];
 
-        this._nbToload = imageUrls.length;
+        this.nbToload = imageUrls.length;
 
         let i: number = imageUrls.length;
         while (i--) {
-            this._images[i] = new Image();
-            this._images[i].onload = this._images[i].onerror = this._images[i].onabort = () => {
+            this.images[i] = new Image();
+            this.images[i].onload = this.images[i].onerror = this.images[i].onabort = () => {
                 // Callback when images loaded.
-                this._loaded += 1;
-                if (this._loaded === imageUrls.length && callback ) {
-                    this._isAllLoaded = true;
-                    callback( this._images );
+                this.loaded += 1;
+                if (this.loaded === imageUrls.length && callback) {
+                    this.isAllLoaded = true;
+                    callback(this.images);
                 }
             };
-            this._images[i].src = imageUrls[i];
+            this.images[i].src = imageUrls[i];
         }
     }
 
-    get loaded(): number {
-        return this._loaded;
+    get getLoaded(): number {
+        return this.loaded;
     }
 
-    get nbToload(): number {
-        return this._nbToload;
+    get getNbToload(): number {
+        return this.nbToload;
     }
 
-    get isAllLoaded(): boolean {
-        return this._isAllLoaded;
+    get getIsAllLoaded(): boolean {
+        return this.isAllLoaded;
     }
 }

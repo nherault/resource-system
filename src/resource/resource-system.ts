@@ -1,16 +1,19 @@
-import { ResourceSystem, ResourceInput, Loaders, Loader, ResourceOutput, ResourceSystemOption, ResourceSystemOptionParam } from "./resource-system.types";
+import {
+  Loader, Loaders, ResourceInput, ResourceInputData, ResourceOutput, ResourceOutputData,
+  ResourceSystem, ResourceSystemOption, ResourceSystemOptionParam,
+} from './resource-system.types';
 
 const defaultOptions: ResourceSystemOption = {
   autoReload: false,
   forceReload: false,
-  loaderNotDefineMessage: "Loader not define for type",
-  loadResourceAlreadyInProgress: "Load Resources already in progress !",
+  loadResourceAlreadyInProgress: 'Load Resources already in progress !',
+  loaderNotDefineMessage: 'Loader not define for type',
 };
 
 export class ResourceSystemDefault implements ResourceSystem {
 
-  private resourcesData: { [propName: string]: ResourceOutput };
-  private resourcesInput: { [propName: string]: ResourceInput };
+  private resourcesData: ResourceOutputData;
+  private resourcesInput: ResourceInputData;
   private loaded: number;
   private nbToLoad: number;
   private resourcesInError: { [propName: string]: any };
@@ -22,61 +25,61 @@ export class ResourceSystemDefault implements ResourceSystem {
     this.resourcesInput = {};
     this.loaded = 0;
     this.nbToLoad = 0;
-    this.resourcesInError = [];
+    this.resourcesInError = {};
     this.loaders = {};
     this.options = { ...defaultOptions };
   }
 
-  reset(): ResourceSystem {
+  public reset(): ResourceSystem {
     this.resourcesData = {};
     this.resourcesInput = {};
     this.loaded = 0;
     this.nbToLoad = 0;
-    this.resourcesInError = [];
+    this.resourcesInError = {};
     return this;
   }
 
-  addLoader(loader: Loader): ResourceSystem {
+  public addLoader(loader: Loader): ResourceSystem {
     this.loaders[loader.type] = loader;
     return this;
   }
 
-  removeLoader(loader: Loader): ResourceSystem {
+  public removeLoader(loader: Loader): ResourceSystem {
     delete this.loaders[loader.type];
     return this;
   }
 
-  removeAllLoaders(): ResourceSystem {
+  public removeAllLoaders(): ResourceSystem {
     this.loaders = {};
     return this;
   }
 
-  updateOptions(options: ResourceSystemOptionParam): ResourceSystem {
+  public updateOptions(options: ResourceSystemOptionParam): ResourceSystem {
     this.options = {
       ...this.options,
-      ...options
-    }
+      ...options,
+    };
     return this;
   }
 
-  loadResources(...resourcesInput: ResourceInput[]): Promise<{ [propName: string]: ResourceOutput }> {
+  public loadResources(...resourcesInput: ResourceInput[]): Promise<ResourceOutputData> {
 
     return new Promise((resolve, reject) => {
       if (!this.isAllLoaded()) {
-        reject( new Error(this.options.loadResourceAlreadyInProgress));
+        reject(new Error(this.options.loadResourceAlreadyInProgress));
       }
-  
+
       this.nbToLoad += resourcesInput.length;
-  
+
       // Iterate from the resources.
       resourcesInput.forEach((resourceInput) => {
-  
+
         // Load if not already load or if autoReload is set to 'true'
         if (this.options.autoReload || this.resourcesInput[resourceInput.id] === undefined) {
 
           this.resourcesInput[resourceInput.id] = resourceInput;
           const LOADER = this.loaders[resourceInput.type];
-  
+
           // Add directly the function resources.
           if (LOADER) {
             LOADER.load(resourceInput, (id, resourceOutput) => {
@@ -97,45 +100,45 @@ export class ResourceSystemDefault implements ResourceSystem {
           this.onResourceLoaded(resolve);
         }
       });
-    });    
+    });
   }
 
-  getResource(id: string): ResourceOutput | undefined {
+  public getResource(id: string): ResourceOutput | undefined {
     return this.resourcesData[id];
   }
 
-  getResources(): ResourceOutput[] {    
+  public getResources(): ResourceOutput[] {
     return Object.values(this.resourcesData);
   }
 
-  getResourcesInput(): ResourceInput[] {
+  public getResourcesInput(): ResourceInput[] {
     return Object.values(this.resourcesInput);
   }
 
-  getLoaded(): number {
+  public getLoaded(): number {
     return this.loaded;
   }
 
-  getNbToLoad(): number {
+  public getNbToLoad(): number {
     return this.nbToLoad;
   }
 
-  isAllLoaded(): boolean {
-    return this.loaded == this.nbToLoad;
+  public isAllLoaded(): boolean {
+    return this.loaded === this.nbToLoad;
   }
 
-  isResourcesInError(): boolean {
-    return this.resourcesInError.length > 0;
+  public isResourcesInError(): boolean {
+    return Object.keys(this.resourcesInError).length > 0;
   }
 
-  getResourcesInError(): { [propName: string]: any } {
+  public getResourcesInError(): { [propName: string]: any } {
     return this.resourcesInError;
   }
 
-  private onResourceLoaded(resolve: Function) {
+  private onResourceLoaded(resolve: (value?: ResourceOutputData | PromiseLike<ResourceOutputData>) => void) {
     this.loaded++;
     if (this.isAllLoaded()) {
       resolve(this.resourcesData);
     }
   }
-};
+}

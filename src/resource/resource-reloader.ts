@@ -1,21 +1,23 @@
-import {ResourceInput, ResourceSystem, ResourceReloader, ResourceReloaderOptionParam, ResourceReloaderOption } from './resource-system.types';
+import {
+    ResourceInput, ResourceReloader, ResourceReloaderOption, ResourceReloaderOptionParam, ResourceSystem,
+} from './resource-system.types';
 
 const resourceReloaderOptionDefault: ResourceReloaderOption = {
-    assetsPrefix: "",
-    forceReloadModifier: "?", // #
+    assetsPrefix: '',
+    forceReloadModifier: '?', // #
     intervalTime: 2000,
-    resourceTypesException: []
-}
+    resourceTypesException: [],
+};
 
 export class ResourceReloaderDefault implements ResourceReloader {
 
     private options: ResourceReloaderOption;
 
     constructor() {
-        this.options = { ... resourceReloaderOptionDefault };
+        this.options = { ...resourceReloaderOptionDefault };
     }
 
-    forceReload(resourceSystem: ResourceSystem, options?: ResourceReloaderOptionParam): number {
+    public forceReload(resourceSystem: ResourceSystem, options?: ResourceReloaderOptionParam): number {
         this.options = options ? { ...this.options, ...options } : this.options;
         return window.setInterval(() => {
             if (resourceSystem.isAllLoaded()) {
@@ -34,12 +36,10 @@ export class ResourceReloaderDefault implements ResourceReloader {
 
         const now = Date.now();
         const resourceCopy = JSON.parse(JSON.stringify(resource));
-        if (this.options.assetsPrefix) {
-            resourceCopy.source = this.options.assetsPrefix + resourceCopy.source + this.options.forceReloadModifier + now;
-        } else {
-            resourceCopy.source = resourceCopy.source + this.options.forceReloadModifier + now;
-        }
+        resourceCopy.source = this.options.assetsPrefix
+            ? this.options.assetsPrefix + resourceCopy.source + this.options.forceReloadModifier + now
+            : resourceCopy.source + this.options.forceReloadModifier + now;
 
         return resourceCopy;
-    }    
+    }
 }

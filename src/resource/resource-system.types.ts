@@ -1,3 +1,11 @@
+export interface ResourceOutputData {
+    [propName: string]: ResourceOutput;
+}
+
+export interface ResourceInputData {
+    [propName: string]: ResourceInput;
+}
+
 export interface ResourceInput {
     id: string;
     type: string;
@@ -13,7 +21,10 @@ export interface ResourceOutput {
 
 export interface Loader {
     type: string;
-    load: (resourceInput: ResourceInput, onSuccess: (id: string, resourceOutput: ResourceOutput) => void, onError?: (id: string, error: any) => void) => void;
+    load: (
+        resourceInput: ResourceInput,
+        onSuccess: (id: string, resourceOutput: ResourceOutput) => void,
+        onError?: (id: string, error: any) => void) => void;
 }
 
 export interface Loaders {
